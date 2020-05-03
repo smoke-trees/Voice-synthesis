@@ -1,0 +1,20 @@
+*.pyc
+*__pycache__
+*.ipynb_checkpoints
+
+# Logs
+*.log
+
+# Datasets
+*.wav
+*.npy
+*.pickle
+
+# Shell Scripts
+*.sh
+
+# Models 
+vocoder/saved_models/*
+encoder/saved_models/*
+synthesizer/saved_models/*
+
