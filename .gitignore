@@ -1,6 +1,7 @@
 *.pyc
 *__pycache__
 *.ipynb_checkpoints
+.vscode
 
 # Logs
 *.log
@@ -12,6 +13,9 @@
 
 # Shell Scripts
 *.sh
+
+# virtualenv
+env/
 
 # Models 
 vocoder/saved_models/*
