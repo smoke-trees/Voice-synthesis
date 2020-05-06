@@ -125,12 +125,116 @@ We tested the samples of English actors and celebrities and we managed to get gr
 - Experiment with Samuel A Jackson Sample : The result was very astonishing for us and we managed to get awesome results on any custom text. The visual graphs of the spectograms is given below:<br>
 
     <p align="center">
-    <img src="..\Assets\Results\sj1.PNG"/><br><br>
     <img src="..\Assets\Results\sj2.PNG"/>
     </p>
 
     The result of this experiment can be found [here](ENTER_URL_OF_AUDIO_SAMPLE)  
 
+
+## Training Your Own Custom Model
+
+This section basically defines the procedure you have to do indorder to train your own model on your custom dataset.
+
+### Data Requirements
+Inorder to train models on your own custom dataset. You need to follow the following steps
+
+- Find a multispeaker dataset of the particular language you want to synthesize. It should have following specifications
+    - Multispeaker voice samples (As many as possible). 
+    - Propely annotated
+    - Phoenotics of each syllable clearly defined
+- Clean you datasets using some audio tools like [Audacity](https://www.audacityteam.org/). You can remove the backgrund noise from the audio to make it more resonating and clear.
+- Some of the probable type of audio recording can be considered for celebrity actors voice samples are:
+    - Youtube Videos of Interviews
+    - Monologues from any film
+    - Speech given by any celebrities<br> 
+
+
+The audio synthesis in any language can be done based on the availability of an annotated data.
+Some of the data sources where you can search for data is:
+- [Google dataset Search Engine](https://datasetsearch.research.google.com/)
+- [Kaggle](https://www.kaggle.com/)
+- [TDIL](https://tdil-dc.in/index.php?lang=en)
+- [IndicTTS](https://www.iitm.ac.in/donlab/tts/database.php)
+
+
+### Steps to train your own model
+
+In order to train your own model you should take the following steps:
+
+- Setup your environment
+    - Pre-Requisites
+        - GPU
+        - Python (3.6 or 3.7)
+        - Nvidia Drivers
+        - CUDA compatible with your NVIDIA Drivers
+        - Requirement Packages
+        - IDE
+    - Get the code from the repo by cloning it.
+
+- Configure your Encoder model on your custom speaker dataset and create new embeddings
+    - Edit you encoder configurations and tweak the code based on your language preference
+    - Train the new embeddings which can be found in this [folder](pre_train/encoder)
+    <br>
+    
+    Details about the encoder model can be found [here](encoder/README.md)
+
+- Change the syntheiszer and generate new mel spectograms based on your new embedding vectors. All the trained model checkpoints can be found [here](pretrain/synthesizer). <br>
+All the details about the synthesizer can be found [here](synthesizer/README.md)
+
+- Finally change the Vocoder network and generate new waveforms in synthesized form. All the trained model checkpoints can be found [here](pretrain/vocoder). <br>
+All the details about the vocoder can be found [here](vocoder/README.md)
+
+
+### Steps to test your model
+
+Follow the details for testing the model in this [file](./synthesize.py)
+- Load all the trained models
+    ``` python
+    encoder_weights = Path("pre_train/encoder/saved_models/pretrained.pt")
+    vocoder_weights = Path("pre_train/vocoder/saved_models/pretrained/pretrained.pt")
+    syn_dir = Path("pre_train/synthesizer/saved_models/logs-pretrained/taco_pretrained")
+    encoder.load_model(encoder_weights)
+    synthesizer = Synthesizer(syn_dir)
+    vocoder.load_model(vocoder_weights)
+    ```
+- Pass the custom text to the synthesize function and get the generated waveform in the foerm of numpy arrays.
+    ``` python
+    def synthesized_voice(text, speaker_name):
+
+        sample_dir = "src\samples\Original Samples"
+        in_fpath = os.path.join(sample_dir,         speaker_name + '.mp3') 
+        reprocessed_wav = encoder.preprocess_wav(in_fpath)
+        original_wav, sampling_rate = librosa.load(in_fpath)
+        preprocessed_wav = encoder.preprocess_wav(original_wav, sampling_rate)
+        embed = encoder.embed_utterance(preprocessed_wav)
+        print("Synthesizing new audio...")
+        with io.capture_output() as captured:
+            specs = synthesizer.synthesize_spectrograms([text], [embed])
+        generated_wav = vocoder.infer_waveform(specs[0])
+        generated_wav = np.pad(generated_wav, (0, synthesizer.sample_rate), mode="constant")
+        print("Synthesized audio generated")
+        return generated_wav, synthesizer.sample_rate
+
+    ```
+- You can even save this generated waveform by passing it to the following function
+    ``` python
+    def save_audio_local(generated_wav, speaker_name, sample_rate):
+    
+        save_dir = 'src\samples\Synthesised_Samples'
+        file_path = os.path.join(save_dir, speaker_name + "_synthesized.mp3")
+        librosa.output.write_wav(file_path, generated_wav, sample_rate)
+    ```
+    All the saved files can be found [here](samples/Synthesised_Samples)
+
+    You can run the following file by the following command:
+    ``` bash
+    ## If you are in root of the work dir
+    cd src
+    python synthesize.py
+    ```
+
+
+There is a testing [jupyter notebook](test/voice_synthesis_example.ipynb) included for convenience.
 
 
 
