@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+        function send_request(){
+            console.log('here');
+            const URL = "http://localhost:5000/api/test";
+            var choice = document.getElementById("t2");
+            var speaker = choice.options[choice.selectedIndex].value;
+            const data={
+                target_text : document.getElementById("t1").value,
+                target_speaker : speaker
+            };
+
+            console.log(data);
+    
+            const params = {
+                body : data,
+                method : "POST",
+                headers : {
+                    "content-type" : "application/json; charset=UTF-8"
+                }
+            };
+            fetch(URL, params);
+
+            document.getElementById("audio_test").setAttribute("src", "http://localhost:5000/api/test");
+            document.getElementById("audio_test").setAttribute("type", "audio/mp3");
+            
+            let music = document.getElementById('music');
+            music.load();
+            music.play();
+            
+
+    
+        }
+    
+    </script>
+</head>
+
+<body>
+    <label>Enter custom text</label>
+    <input id = "t1" type="text" placeholder="Enter text"/><br/><br/>
+    <label>Select Seaker</label>
+    <select id = "t2">
+        <option disabled selected value> -- select an option -- </option>
+        <option value="honey_singh">Honey Singh</option>
+        <option value="samuel_jackson">Smauel A Jackson</option>
+    </select><br/><br/>
+    <button type="submit" onclick="send_request()">submit</button><br/><br/>
+    <div>
+
+    <audio id="music" controls preload="all">
+        <source id= "audio_test" src="" type="">
+        Your browser does not support the audio element.
+    </audio>
+    
+    </div>
+</body>
+</html>
