@@ -8,7 +8,7 @@ from flask_cors import CORS,cross_origin
 import pyaudio
 import numpy
 
-from src import synthesize as syn
+# from src import synthesize as syn
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -32,8 +32,8 @@ def synthesize_speech_sound():
         data = {'status' : 'No target speaker provided'}
         return Response(json.dumps(data), status=402, mimetype='application/json')
     
-    output, RATE = syn.synthesized_voice(target_text, target_speaker)
-    
+    # output, RATE = syn.synthesized_voice(target_text, target_speaker)
+    output = 'ashgdasgdhasgdh'
     def generate():
         
         fwav = io.StringIO(output.tobytes())
@@ -48,7 +48,9 @@ def synthesize_speech_sound():
         
 @app.route('/')
 def index():
+    
     """ Audio streaming home page. """
+    
     return render_template('test_stream.html')
 
 # start flask app

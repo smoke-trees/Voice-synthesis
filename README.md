@@ -43,10 +43,3 @@
 
 
 
-<br>
-<br>
-
-<p align="center">
-	Made with :heart: by DSC VIT
-</p>
-

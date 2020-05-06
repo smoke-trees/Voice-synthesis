@@ -9,9 +9,11 @@
         function send_request(){
             console.log('here');
             const URL = "http://localhost:5000/api/test";
+            var choice = document.getElementById("t2");
+            var speaker = choice.options[choice.selectedIndex].value;
             const data={
                 target_text : document.getElementById("t1").value,
-                target_speaker : document.getElementById("t2").value
+                target_speaker : speaker
             };
 
             console.log(data);
@@ -40,10 +42,17 @@
 </head>
 
 <body>
-    <input id = "t1" type="text" placeholder="Enter text"/>
-    <input id = "t2" type="text" placeholder="Enter speaker"/>
+    <label>Enter custom text</label>
+    <input id = "t1" type="text" placeholder="Enter text"/><br/><br/>
+    <label>Select Seaker</label>
+    <select id = "t2">
+        <option disabled selected value> -- select an option -- </option>
+        <option value="honey_singh">Honey Singh</option>
+        <option value="samuel_jackson">Smauel A Jackson</option>
+    </select><br/><br/>
     <button type="submit" onclick="send_request()">submit</button><br/><br/>
     <div>
+
     <audio id="music" controls preload="all">
         <source id= "audio_test" src="" type="">
         Your browser does not support the audio element.

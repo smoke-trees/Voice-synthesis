@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import os
 
 import librosa
-
 import numpy as np
 
-from pathlib import Path
 from encoder import inference as encoder
 from vocoder import inference as vocoder
 from synthesizer.inference import Synthesizer
@@ -33,10 +32,14 @@ def choose_speaker_audio(speaker_name):
         speaker audio file path
         
     """
+    ## TODO implement this function if you want to change the speaker 
     pass
 
-def save_audio_local(generated_wav):
-    pass
+def save_audio_local(generated_wav, speaker_name, sample_rate):
+    
+    save_dir = 'src\samples\Original Samples'
+    file_path = os.path.join(save_dir, speaker_name + "_synthesized.mp3")
+    librosa.output.write_wav(file_path, generated_wav, sample_rate)
 
 def synthesized_voice(text, speaker_name):
     """
@@ -53,7 +56,9 @@ def synthesized_voice(text, speaker_name):
         Numpy padded array of synthesized audio signal
 
     """
-    in_fpath = Path("src\samples\honey_singh.mp3") # Audio file to be synthesized, can be changed to audio file of choice, refer synthesizer.py
+    sample_dir = "src\samples\Original Samples"
+     
+    in_fpath = os.path.join(sample_dir, speaker_name + '.mp3') # Audio file to be synthesized, can be changed to audio file of choice, refer synthesizer.py
     reprocessed_wav = encoder.preprocess_wav(in_fpath)
     original_wav, sampling_rate = librosa.load(in_fpath)
     preprocessed_wav = encoder.preprocess_wav(original_wav, sampling_rate)
@@ -64,6 +69,9 @@ def synthesized_voice(text, speaker_name):
     generated_wav = vocoder.infer_waveform(specs[0])
     generated_wav = np.pad(generated_wav, (0, synthesizer.sample_rate), mode="constant")
     print("Synthesized audio generated")
+    
+    ## For saving samples you can call save_audio_local
+    ## save_audio_local(generated_wav, speaker_name, synthesizer.sample_rate)
 
     return generated_wav, synthesizer.sample_rate
 
