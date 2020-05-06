@@ -57,8 +57,7 @@ If you want to try and test out the samples trained and how the model is perform
 	After installing all the dependencies and environment prerequisites run the below file to check you are ready and good to go!<br>
 	
 	``` bash
-	cd src
-	python3 check_env.py
+	./test.sh
 	```
 
 * Directions to execute
@@ -73,6 +72,12 @@ If you want to try and test out the samples trained and how the model is perform
 	- Test through the Synthesize function
 		- Follow the instructions given [here](src/README.md)
 
+	- Test using Docker
+		```bash
+		 docker build -t smoketrees/voice:latest .
+		 docker run smoketrees/voice:latest -p 5000:5000
+		```
+
 <br>
 
 ## Instructions to train your own models
@@ -83,8 +88,6 @@ For more information about the samples tested and there results you can get all 
 
 ## Contributors
 
-* [SMOKE TREES](https://github.com/smoke-trees)
-* [TANMAY](https://github.com/Tanmay244)
-
-
+* [SmokeTrees](https://github.com/smoke-trees)
+* [Tanmay Agarwal](https://github.com/Tanmay244)
 
