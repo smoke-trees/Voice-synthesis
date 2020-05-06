@@ -11,8 +11,7 @@
 *.npy
 *.pickle
 
-# Shell Scripts
-*.sh
+
 
 # virtualenv
 env/
